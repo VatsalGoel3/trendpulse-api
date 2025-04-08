@@ -1,14 +1,16 @@
-import os
 import json
 from aws_lambda_powertools import Logger, Metrics, Tracer
-from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.metrics import MetricUnit
-from utils import reddit, hn, newsapi, sentiment
+from aws_lambda_powertools.logging import correlation_paths
+from aws_lambda_powertools.event_handler import APIGatewayRestResolver
+from utils import reddit, hn, newsapi, sentiment, trends
 
-logger = Logger()
-tracer = Tracer()
-metrics = Metrics(namespace="TrendPulse")
+logger = Logger(service="trendpulse-api")
+tracer = Tracer(service="trendpulse-api")
+metrics = Metrics(namespace="TrendPulse", service="trendpulse-api")
+
 app = APIGatewayRestResolver()
+
 
 @app.get("/enrich")
 @tracer.capture_method
@@ -33,7 +35,7 @@ def enrich_data():
         hn_results = hn.fetch_posts(query)
         news_results = newsapi.fetch_articles(query)
 
-        # Perform Sentiment Analysis
+        # Sentiment Analysis
         for item in reddit_results:
             item["sentiment"] = sentiment.analyze_sentiment(item.get("title", ""))
 
@@ -41,17 +43,26 @@ def enrich_data():
             item["sentiment"] = sentiment.analyze_sentiment(item.get("title", ""))
 
         for item in news_results:
-            text = item.get("title", "") + " " + item.get("description", "")
-            item["sentiment"] = sentiment.analyze_sentiment(text)
+            title = item.get("title", "")
+            description = item.get("description", "")
+            item["sentiment"] = sentiment.analyze_sentiment(f"{title} {description}".strip())
+
+        # Trend Analysis
+        trends_summary = {
+            "reddit": trends.calculate_trends(reddit_results),
+            "hackernews": trends.calculate_trends(hn_results),
+            "news": trends.calculate_trends(news_results)
+        }
 
         response = {
             "query": query,
+            "trends": trends_summary,
             "reddit": reddit_results,
             "hackernews": hn_results,
             "news": news_results
         }
 
-        logger.info("Successfully fetched and enriched data")
+        logger.info("Successfully fetched, enriched data, and calculated trends")
         metrics.add_metric(name="EnrichSuccess", unit=MetricUnit.Count, value=1)
 
         return {
@@ -76,8 +87,8 @@ def enrich_data():
             "body": json.dumps({"error": "Internal server error"})
         }
 
-@logger.inject_lambda_context
+
+@logger.inject_lambda_context(correlation_id_path=correlation_paths.API_GATEWAY_REST)
 @tracer.capture_lambda_handler
-@metrics.log_metrics
 def lambda_handler(event, context):
     return app.resolve(event, context)
