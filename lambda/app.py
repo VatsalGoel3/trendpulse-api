@@ -3,7 +3,7 @@ import json
 from aws_lambda_powertools import Logger, Metrics, Tracer
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.metrics import MetricUnit
-from utils import reddit, hn, newsapi
+from utils import reddit, hn, newsapi, sentiment
 
 logger = Logger()
 tracer = Tracer()
@@ -33,6 +33,17 @@ def enrich_data():
         hn_results = hn.fetch_posts(query)
         news_results = newsapi.fetch_articles(query)
 
+        # Perform Sentiment Analysis
+        for item in reddit_results:
+            item["sentiment"] = sentiment.analyze_sentiment(item.get("title", ""))
+
+        for item in hn_results:
+            item["sentiment"] = sentiment.analyze_sentiment(item.get("title", ""))
+
+        for item in news_results:
+            text = item.get("title", "") + " " + item.get("description", "")
+            item["sentiment"] = sentiment.analyze_sentiment(text)
+
         response = {
             "query": query,
             "reddit": reddit_results,
@@ -40,7 +51,7 @@ def enrich_data():
             "news": news_results
         }
 
-        logger.info("Successfully fetched and structured data")
+        logger.info("Successfully fetched and enriched data")
         metrics.add_metric(name="EnrichSuccess", unit=MetricUnit.Count, value=1)
 
         return {
