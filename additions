@@ -1,0 +1,4 @@
+brew tap aws/tap
+brew install aws-sam-cli
+had to run this for sam
+

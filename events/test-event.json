@@ -1,0 +1,7 @@
+{
+    "queryStringParameters": {
+      "query": "OpenAI"
+    },
+    "httpMethod": "GET",
+    "path": "/enrich"
+  }

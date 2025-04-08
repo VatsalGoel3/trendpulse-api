@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: TrendPulse Serverless API for sentiment and trend insights
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 10
+    MemorySize: 512
+    Tracing: Active
+    Tags:
+      Project: TrendPulse
+      Owner: VatsalGoel3
+
+Resources:
+  TrendPulseAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+
+  TrendPulseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.lambda_handler
+      CodeUri: lambda/
+      Policies:
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: '*'  # 🔐 You should replace this with actual ARNs later
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /enrich
+            Method: get
+            RestApiId: !Ref TrendPulseAPI
+      Environment:
+        Variables:
+          LOG_LEVEL: INFO
+          POWERTOOLS_SERVICE_NAME: trendpulse-api
+          REDDIT_SECRET_NAME: reddit_credentials
+          NEWSAPI_SECRET_NAME: newsapi_key
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${TrendPulseAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/enrich"
+    Export:
+      Name: TrendPulseApiUrl
