@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SearchBar from './components/SearchBar';
 import TrendChart from './components/insights/TrendChart';
 import SentimentDetails from './components/insights/SentimentDetails';
+import SentimentBarChart from './components/insights/SentimentBarChart';
 import DataTable from './components/DataTable';
 import { fetchTrends } from './services/api';
 
@@ -34,8 +35,14 @@ const App: React.FC = () => {
             hackernews={results.hackernews}
             news={results.news}
           />
-
-
+          <div className="mt-8">
+            <h2 className="text-lg font-semibold mb-2">Sentiment by Source</h2>
+            <SentimentBarChart
+              reddit={results.reddit}
+              hackernews={results.hackernews}
+              news={results.news}
+            />
+          </div>
           <div className="mt-8">
             <SentimentDetails source="Reddit" posts={results.reddit.slice(0, 3)} />
             <SentimentDetails source="Hacker News" posts={results.hackernews.slice(0, 3)} />
