@@ -31,9 +31,9 @@ def enrich_data():
     logger.info(f"Processing query: {query}")
 
     try:
-        reddit_results = reddit.fetch_posts(query)
-        hn_results = hn.fetch_posts(query)
-        news_results = newsapi.fetch_articles(query)
+        reddit_results = reddit.fetch_posts(query, limit=20)
+        hn_results = hn.fetch_posts(query, limit=20)
+        news_results = newsapi.fetch_articles(query, limit=20)
 
         # Sentiment Analysis
         for item in reddit_results:

@@ -42,7 +42,7 @@ def get_reddit_client():
         logger.exception("Error initializing Reddit client")
         raise e
 
-def fetch_posts(query, limit=5):
+def fetch_posts(query, limit=20):
     try:
         reddit = get_reddit_client()
         posts = []
