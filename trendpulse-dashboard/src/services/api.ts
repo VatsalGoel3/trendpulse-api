@@ -1,12 +1,11 @@
 import axios from 'axios';
 
-const API_URL = "https://YOUR_API_ENDPOINT/Prod/enrich";
-const API_KEY = "YOUR_API_KEY";
+const API_URL = "http://127.0.0.1:3000/enrich"; // 👈 Local SAM endpoint
 
 export const fetchTrends = async (query: string) => {
   const { data } = await axios.get(API_URL, {
     params: { query },
-    headers: { "x-api-key": API_KEY },
+    // Remove x-api-key for local testing
   });
   return JSON.parse(data.body);
 };

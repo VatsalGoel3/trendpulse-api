@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SearchBar from './components/SearchBar';
 import TrendChart from './components/TrendChart';
 import { fetchTrends } from './services/api';
+import SentimentDetails from './components/SentimentDetails';
 
 const App: React.FC = () => {
   const [results, setResults] = useState<any>(null);
@@ -27,7 +28,14 @@ const App: React.FC = () => {
       {results && (
         <div className="mt-4">
           <h2 className="text-xl mb-2">Trends Summary</h2>
-          <TrendChart trends={results.trends} />
+          <TrendChart
+            reddit={results.reddit}
+            hackernews={results.hackernews}
+            news={results.news}
+          />
+          <SentimentDetails source="Reddit" data={results.reddit} />
+          <SentimentDetails source="Hacker News" data={results.hackernews} />
+          <SentimentDetails source="NewsAPI" data={results.news} />
         </div>
       )}
     </div>

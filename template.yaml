@@ -17,6 +17,10 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
+      Cors:
+        AllowMethods: "'GET,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"  # 👈 Required for frontend localhost CORS support
 
   TrendPulseFunction:
     Type: AWS::Serverless::Function
@@ -25,7 +29,7 @@ Resources:
       CodeUri: lambda/
       Policies:
         - AWSSecretsManagerGetSecretValuePolicy:
-            SecretArn: '*'  # 🔐 You should replace this with actual ARNs later
+            SecretArn: '*'  # In production, restrict this
       Events:
         ApiEvent:
           Type: Api

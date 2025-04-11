@@ -34,10 +34,10 @@ def get_newsapi_key():
         logger.exception("NewsAPI secret is malformed")
         raise e
 
-def fetch_articles(query, limit=5):
+def fetch_articles(query, limit=20):
     try:
         api_key = get_newsapi_key()
-        url = f"https://newsapi.org/v2/everything?q={query}&pageSize={limit}&apiKey={api_key}"
+        url = f"https://newsapi.org/v2/everything?q={query}&pageSize={limit}&sortBy=relevancy&apiKey={api_key}"
 
         response = requests.get(url, timeout=5)
         response.raise_for_status()

@@ -3,7 +3,7 @@ from aws_lambda_powertools import Logger
 
 logger = Logger()
 
-def fetch_posts(query, limit=5):
+def fetch_posts(query, limit=20):
     url = f"https://hn.algolia.com/api/v1/search?query={query}&hitsPerPage={limit}"
 
     try:
