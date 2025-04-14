@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Optional: root container layout improvements */
+#root {
+  @apply max-w-7xl mx-auto p-4;
+}

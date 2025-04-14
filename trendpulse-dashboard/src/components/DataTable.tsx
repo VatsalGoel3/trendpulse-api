@@ -4,11 +4,11 @@ import clsx from 'clsx';
 interface Post {
   title: string;
   sentiment: {
-    label: string;
+    label: 'Positive' | 'Neutral' | 'Negative';
     score: number;
   };
   url: string;
-  created?: string | number; // timestamp
+  created?: string | number;
 }
 
 interface DataTableProps {
@@ -24,33 +24,33 @@ const sentimentColor = {
 
 const DataTable: React.FC<DataTableProps> = ({ source, data }) => {
   return (
-    <div className="overflow-x-auto mb-10">
-      <h3 className="text-lg font-semibold mb-2">{source} - All Posts</h3>
-      <table className="min-w-full bg-white border rounded">
-        <thead>
-          <tr className="bg-gray-100 text-left">
-            <th className="px-4 py-2 border-b">Title</th>
-            <th className="px-4 py-2 border-b">Sentiment</th>
-            <th className="px-4 py-2 border-b">Score</th>
-            <th className="px-4 py-2 border-b">Date</th>
-            <th className="px-4 py-2 border-b">Link</th>
+    <div className="overflow-x-auto mb-10 border rounded-lg bg-white shadow-sm">
+      <h3 className="text-lg font-semibold mb-4 px-4 pt-4">{source} - All Posts</h3>
+      <table className="min-w-full text-sm text-left">
+        <thead className="bg-gray-100 text-xs uppercase text-gray-600">
+          <tr>
+            <th className="px-4 py-2">Title</th>
+            <th className="px-4 py-2">Sentiment</th>
+            <th className="px-4 py-2">Score</th>
+            <th className="px-4 py-2">Date</th>
+            <th className="px-4 py-2">Link</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-gray-800">
           {data.map((item, idx) => (
             <tr key={idx} className="hover:bg-gray-50">
-              <td className="px-4 py-2 border-b">{item.title}</td>
-              <td className="px-4 py-2 border-b">
-                <span className={clsx("px-2 py-1 rounded text-xs font-medium", sentimentColor[item.sentiment.label])}>
+              <td className="px-4 py-2">{item.title}</td>
+              <td className="px-4 py-2">
+                <span className={clsx("px-2 py-1 rounded font-medium text-xs", sentimentColor[item.sentiment.label])}>
                   {item.sentiment.label}
                 </span>
               </td>
-              <td className="px-4 py-2 border-b">{item.sentiment.score}</td>
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2">{item.sentiment.score.toFixed(2)}</td>
+              <td className="px-4 py-2">
                 {item.created ? new Date(item.created).toLocaleString() : 'N/A'}
               </td>
-              <td className="px-4 py-2 border-b">
-                <a href={item.url} target="_blank" className="text-blue-500 hover:underline text-sm">
+              <td className="px-4 py-2">
+                <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline text-xs">
                   View
                 </a>
               </td>
