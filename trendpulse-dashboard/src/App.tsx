@@ -1,11 +1,9 @@
-// src/App.tsx
 import React, { useState } from 'react';
+import Layout from './components/layout/Layout';
 import SearchBar from './components/SearchBar';
-import Header from './components/layout/Header';
-import Section from './components/layout/Section';
 import TrendChart from './components/insights/TrendChart';
-import SentimentBarChart from './components/insights/SentimentBarChart';
 import SentimentDetails from './components/insights/SentimentDetails';
+import SentimentBarChart from './components/insights/SentimentBarChart';
 import DataTable from './components/DataTable';
 import { fetchTrends } from './services/api';
 
@@ -26,46 +24,45 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <Header title="TrendPulse Dashboard" />
-      <div className="mb-6">
-        <SearchBar onSearch={handleSearch} />
-      </div>
-
-      {loading && <p className="text-center">Loading...</p>}
-
+    <Layout>
+      <SearchBar onSearch={handleSearch} />
+      {loading && <p className="mt-4 text-center">Loading...</p>}
       {results && (
-        <>
-          <Section title="Trends Summary">
+        <div className="mt-6 space-y-10">
+          <section>
+            <h2 className="text-xl font-semibold mb-4">Trends Summary</h2>
             <TrendChart
               reddit={results.reddit}
               hackernews={results.hackernews}
               news={results.news}
             />
-          </Section>
+          </section>
 
-          <Section title="Sentiment Distribution">
+          <section>
+            <h2 className="text-lg font-semibold mb-2">Sentiment Distribution</h2>
             <SentimentBarChart
               reddit={results.reddit}
               hackernews={results.hackernews}
               news={results.news}
             />
-          </Section>
+          </section>
 
-          <Section title="Top Posts by Sentiment">
+          <section>
+            <h2 className="text-lg font-semibold mb-4">Top Posts by Sentiment</h2>
             <SentimentDetails source="Reddit" posts={results.reddit.slice(0, 3)} />
             <SentimentDetails source="Hacker News" posts={results.hackernews.slice(0, 3)} />
             <SentimentDetails source="NewsAPI" posts={results.news.slice(0, 3)} />
-          </Section>
+          </section>
 
-          <Section title="All Posts (Full Data)">
+          <section>
+            <h2 className="text-xl font-bold mb-2">All Posts (Full Data)</h2>
             <DataTable source="Reddit" data={results.reddit} />
             <DataTable source="Hacker News" data={results.hackernews} />
             <DataTable source="NewsAPI" data={results.news} />
-          </Section>
-        </>
+          </section>
+        </div>
       )}
-    </div>
+    </Layout>
   );
 };
 
