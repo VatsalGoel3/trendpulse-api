@@ -8,6 +8,7 @@ import SentimentBarChart from './components/insights/SentimentBarChart';
 import DataTable from './components/DataTable';
 import LoadingSpinner from './components/LoadingSpinner';
 import TopTrends from './pages/TopTrends';
+import CompareQueries from './pages/CompareQueries';
 import { fetchTrends } from './services/api.ts';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -115,6 +116,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/top-trends" element={<TopTrends />} />
+          <Route path="/compare" element={<CompareQueries />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>
