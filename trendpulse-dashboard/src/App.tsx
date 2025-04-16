@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import SearchBar from './components/SearchBar';
 import TrendChart from './components/insights/TrendChart';
@@ -6,10 +7,11 @@ import SentimentDetails from './components/insights/SentimentDetails';
 import SentimentBarChart from './components/insights/SentimentBarChart';
 import DataTable from './components/DataTable';
 import LoadingSpinner from './components/LoadingSpinner';
+import TopTrends from './pages/TopTrends';
 import { fetchTrends } from './services/api.ts';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const App: React.FC = () => {
+const Dashboard: React.FC = () => {
   const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +48,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <>
       <SearchBar onSearch={handleSearch} />
       
       <AnimatePresence mode="wait">
@@ -102,7 +104,21 @@ const App: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </Layout>
+    </>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/top-trends" element={<TopTrends />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 };
 

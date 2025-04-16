@@ -1,6 +1,7 @@
 import React from 'react';
 import { BarChart3, TrendingUp, LineChart, Settings, User } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -8,6 +9,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const location = useLocation();
+  
   const sidebarVariants = {
     open: { x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
     closed: { x: "-100%", transition: { type: "spring", stiffness: 300, damping: 30 } },
@@ -21,6 +24,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const itemTransition = {
     open: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 24 } },
     closed: { y: 20, opacity: 0, transition: { duration: 0.2 } },
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path ? "bg-gray-100 dark:bg-gray-700" : "";
   };
 
   return (
@@ -48,57 +55,62 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div className="mb-4">
           <p className="text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold mb-2 px-2">Analytics</p>
           <div className="space-y-1">
-            <motion.a 
-              href="#" 
-              variants={itemTransition}
-              whileHover={{ scale: 1.02, backgroundColor: "rgba(0,0,0,0.05)" }}
-              className="flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md"
-            >
-              <BarChart3 className="w-5 h-5 mr-2" />
-              <span>Dashboard</span>
-            </motion.a>
-            <motion.a 
-              href="#" 
-              variants={itemTransition}
-              whileHover={{ scale: 1.02, backgroundColor: "rgba(0,0,0,0.05)" }}
-              className="flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md"
-            >
-              <LineChart className="w-5 h-5 mr-2" />
-              <span>Compare Queries</span>
-            </motion.a>
-            <motion.a 
-              href="#" 
-              variants={itemTransition}
-              whileHover={{ scale: 1.02, backgroundColor: "rgba(0,0,0,0.05)" }}
-              className="flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md"
-            >
-              <TrendingUp className="w-5 h-5 mr-2" />
-              <span>Top Trends</span>
-            </motion.a>
+            <motion.div variants={itemTransition}>
+              <Link 
+                to="/" 
+                className={`flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md ${isActive('/')}`}
+                onClick={() => onClose()}
+              >
+                <BarChart3 className="w-5 h-5 mr-2" />
+                <span>Dashboard</span>
+              </Link>
+            </motion.div>
+            <motion.div variants={itemTransition}>
+              <Link 
+                to="/compare" 
+                className={`flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md ${isActive('/compare')}`}
+                onClick={() => onClose()}
+              >
+                <LineChart className="w-5 h-5 mr-2" />
+                <span>Compare Queries</span>
+              </Link>
+            </motion.div>
+            <motion.div variants={itemTransition}>
+              <Link 
+                to="/top-trends" 
+                className={`flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md ${isActive('/top-trends')}`}
+                onClick={() => onClose()}
+              >
+                <TrendingUp className="w-5 h-5 mr-2" />
+                <span>Top Trends</span>
+              </Link>
+            </motion.div>
           </div>
         </div>
         
         <div className="mb-4">
           <p className="text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold mb-2 px-2">Account</p>
           <div className="space-y-1">
-            <motion.a 
-              href="#" 
-              variants={itemTransition}
-              whileHover={{ scale: 1.02, backgroundColor: "rgba(0,0,0,0.05)" }}
-              className="flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md"
-            >
-              <User className="w-5 h-5 mr-2" />
-              <span>Profile</span>
-            </motion.a>
-            <motion.a 
-              href="#" 
-              variants={itemTransition}
-              whileHover={{ scale: 1.02, backgroundColor: "rgba(0,0,0,0.05)" }}
-              className="flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md"
-            >
-              <Settings className="w-5 h-5 mr-2" />
-              <span>Settings</span>
-            </motion.a>
+            <motion.div variants={itemTransition}>
+              <Link 
+                to="/profile" 
+                className={`flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md ${isActive('/profile')}`}
+                onClick={() => onClose()}
+              >
+                <User className="w-5 h-5 mr-2" />
+                <span>Profile</span>
+              </Link>
+            </motion.div>
+            <motion.div variants={itemTransition}>
+              <Link 
+                to="/settings" 
+                className={`flex items-center px-2 py-2 text-gray-700 dark:text-gray-200 rounded-md ${isActive('/settings')}`}
+                onClick={() => onClose()}
+              >
+                <Settings className="w-5 h-5 mr-2" />
+                <span>Settings</span>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </motion.nav>
