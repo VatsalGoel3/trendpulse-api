@@ -45,3 +45,4 @@ Thumbs.db
 coverage/
 *.lcov
 *.lcov.info
+.aws-sam/build.toml

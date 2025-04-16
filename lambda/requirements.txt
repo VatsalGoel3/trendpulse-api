@@ -22,5 +22,5 @@ praw
 python-dateutil
 requests
 boto3
-transformers
-torch
+aws-lambda-powertools
+vaderSentiment
